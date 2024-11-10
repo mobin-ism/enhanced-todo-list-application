@@ -21,8 +21,15 @@ if (config.env !== 'test') {
     app.use(morgan.errorHandler)
 }
 
-// set security HTTP headers
-app.use(helmet())
+// Modified helmet configuration for development
+app.use(
+    helmet({
+        crossOriginEmbedderPolicy: false,
+        crossOriginOpenerPolicy: false,
+        crossOriginResourcePolicy: false,
+        contentSecurityPolicy: false
+    })
+)
 
 // parse json request body
 app.use(express.json())
@@ -37,8 +44,17 @@ app.use(mongoSanitize())
 // gzip compression
 app.use(compression())
 
-// enable cors
-app.use(cors())
+// CORS configuration
+app.use(
+    cors({
+        origin: true,
+        credentials: true,
+        methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+        allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+    })
+)
+
+// Handle preflight requests
 app.options('*', cors())
 
 // jwt authentication
