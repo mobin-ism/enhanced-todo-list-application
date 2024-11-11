@@ -2,7 +2,8 @@ const dotenv = require('dotenv')
 const path = require('path')
 const Joi = require('joi')
 
-dotenv.config({ path: path.join(__dirname, '../../.env') })
+// YOU CAN ALSO PASS THE PATH OF THE ENV FILE: { path: path.join(__dirname, '../../.env') }
+dotenv.config()
 
 const envVarsSchema = Joi.object()
     .keys({
