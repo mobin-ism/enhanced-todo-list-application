@@ -42,7 +42,8 @@ const updateTask = {
             description: Joi.string().allow(''),
             dueDate: Joi.date().iso(),
             isCompleted: Joi.boolean().optional().default(false),
-            categoryId: Joi.string().optional().custom(objectId), // Optional field
+            categoryId: Joi.string().optional().custom(objectId), // Optional field, must be a valid ObjectId if provided
+            userId: Joi.string().optional().custom(objectId), // Optional field, must be a valid ObjectId if provided
             priority: Joi.string()
                 .optional()
                 .valid('high', 'medium', 'low')

@@ -53,7 +53,12 @@ const getTask = catchAsync(async (req, res) => {
  * Update a task
  */
 const updateTask = catchAsync(async (req, res) => {
-    const task = await taskService.updateTaskById(req.params.taskId, req.body)
+    const userId = req.user._id
+    const task = await taskService.updateTaskById(
+        req.params.taskId,
+        req.body,
+        userId
+    )
     res.send(task)
 })
 
@@ -61,7 +66,8 @@ const updateTask = catchAsync(async (req, res) => {
  * Delete a task
  */
 const deleteTask = catchAsync(async (req, res) => {
-    await taskService.deleteTaskById(req.params.taskId)
+    const userId = req.user._id
+    await taskService.deleteTaskById(req.params.taskId, userId)
     res.status(httpStatus.status.OK).send({
         message: 'Task deleted successfully'
     })
