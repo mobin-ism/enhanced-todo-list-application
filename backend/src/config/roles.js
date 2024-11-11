@@ -1,4 +1,10 @@
-const allRoles = {
+// AVAILABLE ROLES
+const Roles = {
+    USER: 'user',
+    ADMIN: 'admin'
+}
+
+const roleAccess = {
     user: ['getCategories', 'manageTasks', 'getTasks'],
     admin: [
         'getUsers',
@@ -10,10 +16,11 @@ const allRoles = {
     ]
 }
 
-const roles = Object.keys(allRoles)
-const roleRights = new Map(Object.entries(allRoles))
+const roles = Object.keys(roleAccess)
+const roleRights = new Map(Object.entries(roleAccess))
 
 module.exports = {
+    Roles,
     roles,
     roleRights
 }

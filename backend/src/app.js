@@ -80,4 +80,7 @@ app.use(errorConverter)
 // handle error
 app.use(errorHandler)
 
+// seeding the database
+require('./db/seed/user.seed')
+
 module.exports = app

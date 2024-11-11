@@ -21,7 +21,10 @@ const createTask = async (taskBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryTasks = async (filter, options) => {
-    const tasks = await Task.paginate(filter, options)
+    const tasks = await Task.paginate(filter, {
+        ...options,
+        populate: 'categoryId'
+    })
     return tasks
 }
 
