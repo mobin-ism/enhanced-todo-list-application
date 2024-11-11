@@ -5,20 +5,31 @@ const catchAsync = require('../utils/catchAsync')
 const categoryService = require('../services/category.service')
 
 const createCategory = catchAsync(async (req, res) => {
-    const category = await categoryService.createCategory(req.body)
+    const body = req.body
+    body.userId = req.user.role === 'admin' ? null : req.user.id
+    const category = await categoryService.createCategory(body)
     res.status(httpStatus.status.CREATED).send(category)
 })
 
 const getCategories = catchAsync(async (req, res) => {
+    // Get the user ID from the authenticated user
+    const userId = req.user._id
     const filter = pick(req.query, ['name'])
+
+    // Ensure the filter considers userId match or null
+    filter.$or = [{ userId }, { userId: null }]
+
     const options = pick(req.query, ['sortBy', 'limit', 'page'])
     const result = await categoryService.queryCategories(filter, options)
     res.send(result)
 })
 
 const getCategory = catchAsync(async (req, res) => {
+    // Get the user ID from the authenticated user
+    const userId = req.user._id
     const category = await categoryService.getCategoryById(
-        req.params.categoryId
+        req.params.categoryId,
+        userId
     )
     if (!category) {
         throw new ApiError(httpStatus.status.NOT_FOUND, 'Category not found')

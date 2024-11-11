@@ -30,7 +30,7 @@ const getTasks = catchAsync(async (req, res) => {
     ])
     // Add userId to the filter to ensure tasks are user-specific
     filter.userId = userId
-    
+
     const options = pick(req.query, ['sortBy', 'limit', 'page'])
     const result = await taskService.queryTasks(filter, options)
     res.send(result)
@@ -40,7 +40,9 @@ const getTasks = catchAsync(async (req, res) => {
  * Get task by ID
  */
 const getTask = catchAsync(async (req, res) => {
-    const task = await taskService.getTaskById(req.params.taskId)
+    // Get the user ID from the authenticated user
+    const userId = req.user._id
+    const task = await taskService.getTaskById(req.params.taskId, userId)
     if (!task) {
         throw new ApiError(httpStatus.status.NOT_FOUND, 'Task not found')
     }

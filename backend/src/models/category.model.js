@@ -16,6 +16,11 @@ const categorySchema = mongoose.Schema(
         isActive: {
             type: Boolean,
             default: true
+        },
+        userId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            required: false
         }
     },
     {

@@ -8,12 +8,14 @@ const ApiError = require('../utils/ApiError')
  * @returns {Promise<Category>}
  */
 const createCategory = async (categoryBody) => {
+    /*
     if (await Category.isNameTaken(categoryBody.name)) {
         throw new ApiError(
             httpStatus.status.BAD_REQUEST,
             'Category name already taken'
         )
     }
+    */
     return Category.create(categoryBody)
 }
 
@@ -36,8 +38,11 @@ const queryCategories = async (filter, options) => {
  * @param {ObjectId} id
  * @returns {Promise<Category>}
  */
-const getCategoryById = async (id) => {
-    return Category.findById(id)
+const getCategoryById = async (id, userId) => {
+    return Category.findOne({
+        _id: id,
+        $or: [{ userId }, { userId: null }]
+    })
 }
 
 /**
@@ -51,6 +56,7 @@ const updateCategoryById = async (categoryId, updateBody) => {
     if (!category) {
         throw new ApiError(httpStatus.status.NOT_FOUND, 'Category not found')
     }
+    /*
     if (
         updateBody.name &&
         (await Category.isNameTaken(updateBody.name, categoryId))
@@ -60,6 +66,7 @@ const updateCategoryById = async (categoryId, updateBody) => {
             'Category name already taken'
         )
     }
+    */
     Object.assign(category, updateBody)
     await category.save()
     return category

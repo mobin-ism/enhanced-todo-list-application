@@ -5,7 +5,7 @@ const Roles = {
 }
 
 const roleAccess = {
-    user: ['getCategories', 'manageTasks', 'getTasks'],
+    user: ['manageCategories', 'getCategories', 'manageTasks', 'getTasks'],
     admin: [
         'getUsers',
         'manageUsers',

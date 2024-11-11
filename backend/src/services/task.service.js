@@ -33,8 +33,11 @@ const queryTasks = async (filter, options) => {
  * @param {ObjectId} id
  * @returns {Promise<Task>}
  */
-const getTaskById = async (id) => {
-    return Task.findById(id).populate('categoryId')
+const getTaskById = async (id, userId) => {
+    return Task.findOne({
+        _id: id,
+        $or: [{ userId }, { userId: null }]
+    }).populate('categoryId')
 }
 
 /**
