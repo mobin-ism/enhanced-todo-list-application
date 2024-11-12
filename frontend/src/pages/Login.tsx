@@ -51,7 +51,8 @@ const Login = () => {
 					</label>
 					<input
 						type="email"
-						className="mt-1 block w-full border-gray-300 rounded-md"
+						className="
+                        border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full mt-2  rounded-md"
 						value={email}
 						onChange={(e) => setEmail(e.target.value)}
 					/>
@@ -62,7 +63,7 @@ const Login = () => {
 					</label>
 					<input
 						type="password"
-						className="mt-1 block w-full border-gray-300 rounded-md"
+						className="border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full mt-2  rounded-md"
 						value={password}
 						onChange={(e) => setPassword(e.target.value)}
 					/>

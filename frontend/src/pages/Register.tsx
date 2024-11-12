@@ -62,7 +62,7 @@ const Register = () => {
 					</label>
 					<input
 						type="input"
-						className="mt-1 block w-full border-gray-300 rounded-md"
+						className="border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full mt-2  rounded-md"
 						value={name}
 						onChange={(e) => setName(e.target.value)}
 					/>
@@ -73,7 +73,7 @@ const Register = () => {
 					</label>
 					<input
 						type="email"
-						className="mt-1 block w-full border-gray-300 rounded-md"
+						className="border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full mt-2  rounded-md"
 						value={email}
 						onChange={(e) => setEmail(e.target.value)}
 					/>
@@ -84,7 +84,7 @@ const Register = () => {
 					</label>
 					<input
 						type="password"
-						className="mt-1 block w-full border-gray-300 rounded-md"
+						className="border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full mt-2  rounded-md"
 						value={password}
 						onChange={(e) => setPassword(e.target.value)}
 					/>
@@ -95,7 +95,7 @@ const Register = () => {
 					</label>
 					<input
 						type="password"
-						className="mt-1 block w-full border-gray-300 rounded-md"
+						className="border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full mt-2  rounded-md"
 						value={confirmPassword}
 						onChange={(e) => setConfirmPassword(e.target.value)}
 					/>
@@ -107,7 +107,7 @@ const Register = () => {
 					<span className="text-sm text-gray-600">
 						Already have an account?{" "}
 					</span>
-					<a href="/login" className="text-blue-500 text-sm">
+					<a href="/" className="text-blue-500 text-sm">
 						Login
 					</a>
 				</div>
