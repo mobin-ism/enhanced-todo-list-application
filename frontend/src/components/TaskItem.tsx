@@ -1,11 +1,9 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
-import { MdDeleteOutline, MdOutlineModeEdit } from "react-icons/md";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { HiOutlinePencilAlt } from "react-icons/hi";
-import { FaCheck, FaCross, FaSave } from "react-icons/fa";
-import { ImCross } from "react-icons/im";
+import { FaCheck } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
+import axiosInstance from "../utils/axios-instance";
 
 interface Category {
 	id: string;
@@ -54,7 +52,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onUpdate, onDelete }) => {
 	useEffect(() => {
 		const fetchCategories = async () => {
 			try {
-				const response = await axios.get("http://localhost:3000/v1/categories");
+				const response = await axiosInstance.get("/categories");
 				setCategories(response.data.results); // Assuming response.data.results contains the category list
 			} catch (err) {
 				console.error("Failed to fetch categories:", err);
@@ -70,8 +68,8 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onUpdate, onDelete }) => {
 	const handleSave = async () => {
 		try {
 			const { id, ...taskData } = updatedTask;
-			const response = await axios.patch<Task>(
-				`http://localhost:3000/v1/tasks/${task.id}`,
+			const response = await axiosInstance.patch<Task>(
+				`/tasks/${task.id}`,
 				taskData
 			);
 			onUpdate(response.data);
@@ -90,7 +88,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onUpdate, onDelete }) => {
 	const handleDelete = async () => {
 		if (window.confirm("Are you sure you want to delete this task?")) {
 			try {
-				await axios.delete(`http://localhost:3000/v1/tasks/${task.id}`);
+				await axiosInstance.delete(`/tasks/${task.id}`);
 				onDelete(task.id);
 			} catch (err) {
 				console.error("Failed to delete task:", err);
@@ -102,12 +100,9 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onUpdate, onDelete }) => {
 	const handleCompletionToggle = async () => {
 		try {
 			const updatedStatus = !task.isCompleted;
-			const response = await axios.patch<Task>(
-				`http://localhost:3000/v1/tasks/${task.id}`,
-				{
-					isCompleted: updatedStatus,
-				}
-			);
+			const response = await axiosInstance.patch<Task>(`/tasks/${task.id}`, {
+				isCompleted: updatedStatus,
+			});
 			onUpdate(response.data);
 		} catch (err) {
 			console.error("Failed to update task status:", err);

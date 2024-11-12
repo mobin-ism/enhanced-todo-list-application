@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from "../utils/axios-instance";
 
 const Register = () => {
 	const [name, setName] = useState("");
@@ -27,14 +27,11 @@ const Register = () => {
 		}
 
 		try {
-			const response = await axios.post(
-				"http://localhost:3000/v1/auth/register",
-				{
-					name,
-					email,
-					password,
-				}
-			);
+			const response = await axiosInstance.post("/auth/register", {
+				name,
+				email,
+				password,
+			});
 
 			if (response.data.tokens && response.data.user) {
 				login(response.data.tokens.access.token, response.data.user); // Save token and user data in AuthContext

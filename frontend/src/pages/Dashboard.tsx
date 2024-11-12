@@ -4,10 +4,8 @@ import { useAuth } from "../context/AuthContext";
 import TaskForm from "../components/TaskForm";
 import TaskItem from "../components/TaskItem";
 import CategoryFilter from "../components/CategoryFilter";
-import axios from "axios";
-import { MdNavigateNext } from "react-icons/md";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
-import { CiLogout } from "react-icons/ci";
+import axiosInstance from "../utils/axios-instance";
 
 interface Task {
 	id: string;
@@ -54,12 +52,12 @@ const Dashboard = () => {
 				: "";
 			const searchFilter = searchQuery ? `&title=${searchQuery}` : "";
 
-			const response = await axios.get<{
+			const response = await axiosInstance.get<{
 				results: Task[];
 				page: number;
 				totalPages: number;
 			}>(
-				`http://localhost:3000/v1/tasks?page=${currentPage}&limit=${itemsPerPage}&${sortQuery}${categoryFilter}${searchFilter}`
+				`/tasks?page=${currentPage}&limit=${itemsPerPage}&${sortQuery}${categoryFilter}${searchFilter}`
 			);
 			console.log(response.data.results);
 
@@ -72,9 +70,9 @@ const Dashboard = () => {
 
 	const fetchCategories = async () => {
 		try {
-			const response = await axios.get<{
+			const response = await axiosInstance.get<{
 				results: { id: string; name: string }[];
-			}>("http://localhost:3000/v1/categories");
+			}>("/categories");
 			setCategories(response.data.results);
 		} catch (err) {
 			console.error("Failed to fetch categories:", err);
@@ -121,7 +119,7 @@ const Dashboard = () => {
 			return;
 		}
 		try {
-			const response = await axios.post("http://localhost:3000/v1/categories", {
+			const response = await axiosInstance.post("/categories", {
 				name: newCategoryName,
 			});
 			setCategories((prev) => [...prev, response.data]); // Add new category to the list

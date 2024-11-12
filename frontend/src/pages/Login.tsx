@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from "../utils/axios-instance";
 
 const Login = () => {
 	const [email, setEmail] = useState("");
@@ -20,7 +20,7 @@ const Login = () => {
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		try {
-			const response = await axios.post("http://localhost:3000/v1/auth/login", {
+			const response = await axiosInstance.post("/auth/login", {
 				email,
 				password,
 			});

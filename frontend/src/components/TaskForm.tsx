@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import axiosInstance from "../utils/axios-instance";
 
 const TaskForm = ({ onTaskAdd, categories }) => {
 	const getTodayDate = () => {
@@ -32,10 +32,7 @@ const TaskForm = ({ onTaskAdd, categories }) => {
 		}
 
 		try {
-			const response = await axios.post(
-				"http://localhost:3000/v1/tasks",
-				payload
-			);
+			const response = await axiosInstance.post("/tasks", payload);
 			onTaskAdd(response.data);
 
 			// Reset form fields
