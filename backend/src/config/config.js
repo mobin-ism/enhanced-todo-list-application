@@ -11,10 +11,8 @@ const envVarsSchema = Joi.object()
             .valid('production', 'development', 'test')
             .required(),
         PORT: Joi.number().default(3000),
-        MONGODB_USER: Joi.string().required().description('Mongo DB User'),
-        MONGODB_PASSWORD: Joi.string()
-            .required()
-            .description('Mongo DB Password'),
+        MONGODB_USER: Joi.string().description('Mongo DB User'),
+        MONGODB_PASSWORD: Joi.string().description('Mongo DB Password'),
         MONGODB_HOST: Joi.string().required().description('Mongo DB Host'),
         MONGODB_PORT: Joi.number().required().description('Mongo DB Port'),
         MONGODB_DATABASE: Joi.string()
@@ -58,8 +56,11 @@ module.exports = {
     env: envVars.NODE_ENV,
     port: envVars.PORT,
     mongoose: {
-        url: `mongodb://${envVars.MONGODB_USER}:${encodeURIComponent(envVars.MONGODB_PASSWORD)}@${envVars.MONGODB_HOST}:${envVars.MONGODB_PORT}/${envVars.MONGODB_DATABASE}?authSource=admin`,
-        options: {} // Deprecated options removed
+        url:
+            envVars.MONGODB_USER && envVars.MONGODB_PASSWORD
+                ? `mongodb://${envVars.MONGODB_USER}:${encodeURIComponent(envVars.MONGODB_PASSWORD)}@${envVars.MONGODB_HOST}:${envVars.MONGODB_PORT}/${envVars.MONGODB_DATABASE}?authSource=admin`
+                : `mongodb://${envVars.MONGODB_HOST}:${envVars.MONGODB_PORT}/${envVars.MONGODB_DATABASE}`,
+        options: {}
     },
     jwt: {
         secret: envVars.JWT_SECRET,
