@@ -1,13 +1,18 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
+interface Category {
+	id: string;
+	name: string;
+}
 interface Task {
 	id: string;
 	title: string;
 	description: string;
 	dueDate: string;
-	categoryId: string;
+	categoryId: null | Category;
 	isCompleted: boolean;
+	priority: "high" | "medium" | "low";
 }
 
 interface TaskItemProps {
@@ -83,7 +88,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onUpdate, onDelete }) => {
 
 	const handleCompletionToggle = async () => {
 		try {
-			const updatedStatus = !task.completed;
+			const updatedStatus = !task.isCompleted;
 			const response = await axios.patch<Task>(
 				`http://localhost:3000/v1/tasks/${task.id}`,
 				{
@@ -96,7 +101,6 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onUpdate, onDelete }) => {
 			alert("Failed to update task status. Please try again.");
 		}
 	};
-
 	return (
 		<div className="p-4 bg-white rounded-md shadow-md mb-4 flex justify-between items-center">
 			<div>
@@ -145,13 +149,32 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onUpdate, onDelete }) => {
 					<div>
 						<h3
 							className={`text-lg font-medium ${
-								task.completed ? "line-through text-gray-500" : ""
+								task.isCompleted ? "line-through text-gray-500" : ""
 							}`}
 						>
 							{task.title}
+							{task.priority && (
+								<span
+									className={`ml-2 text-xs px-2 py-0.4 rounded-full font-semibold ${
+										task.priority === "high"
+											? "bg-red-500 text-white"
+											: task.priority === "medium"
+											? "bg-yellow-500 text-white"
+											: "bg-green-500 text-white"
+									}`}
+								>
+									{task.priority}
+								</span>
+							)}
 						</h3>
+
 						<p className="text-sm text-gray-600">{task.description}</p>
-						<p className="text-sm text-gray-600">{task.category}</p>
+						{task.categoryId && (
+							<p className="text-sm text-gray-600">
+								Category: <b>{task.categoryId.name}</b>
+							</p>
+						)}
+
 						<p className="text-sm text-gray-600">
 							Due: {formatDate(task.dueDate)}
 						</p>
@@ -160,15 +183,19 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onUpdate, onDelete }) => {
 			</div>
 
 			<div className="space-x-2 flex items-center">
-				<input
-					type="checkbox"
-					checked={task.completed}
-					onChange={handleCompletionToggle}
-					className="mr-2"
-				/>
-				<span className="text-sm text-gray-600">
-					{task.completed ? "Completed" : "Pending"}
-				</span>
+				{!editMode ? (
+					<>
+						<input
+							type="checkbox"
+							checked={task.isCompleted}
+							onChange={handleCompletionToggle}
+							className="mr-2"
+						/>
+						<span className="text-sm text-gray-600">
+							{task.isCompleted ? "Done" : "To-Do"}
+						</span>
+					</>
+				) : null}
 
 				{editMode ? (
 					<>

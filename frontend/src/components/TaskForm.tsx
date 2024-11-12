@@ -21,6 +21,7 @@ const TaskForm = ({ onTaskAdd, categories }) => {
 				dueDate: newTask.dueDate,
 				priority: newTask.priority,
 			});
+			console.log(response.data);
 			onTaskAdd(response.data);
 
 			// Reset form fields
@@ -37,6 +38,7 @@ const TaskForm = ({ onTaskAdd, categories }) => {
 
 	return (
 		<form onSubmit={handleSubmit} className="bg-white p-4 shadow-md rounded-md">
+			<h2 className="text-xl font-bold mb-2">Add New Task</h2>
 			<div className="mb-4">
 				<label className="block text-sm font-medium text-gray-700">Title</label>
 				<input

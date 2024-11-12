@@ -58,6 +58,8 @@ const Dashboard = () => {
 			}>(
 				`http://localhost:3000/v1/tasks?page=${currentPage}&limit=${itemsPerPage}&${sortQuery}${categoryFilter}${searchFilter}`
 			);
+			console.log(response.data.results);
+
 			setTasks(response.data.results);
 			setTotalPages(response.data.totalPages);
 		} catch (err) {
@@ -142,115 +144,123 @@ const Dashboard = () => {
 				</div>
 			</header>
 			<main className="container mx-auto p-4">
-				<div className="flex justify-between items-center">
-					<CategoryFilter
-						categories={categories}
-						selectedCategory={selectedCategory}
-						setSelectedCategory={handleCategoryChange}
-					/>
-					<div>
-						<button
-							onClick={() => handleSort("priority")}
-							className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2"
-						>
-							Sort by Priority{" "}
-							{sortConfig.field === "priority" && (sortConfig.asc ? "▲" : "▼")}
-						</button>
-						<button
-							onClick={() => handleSort("dueDate")}
-							className="bg-green-500 text-white px-4 py-2 rounded-md"
-						>
-							Sort by Due Date{" "}
-							{sortConfig.field === "dueDate" && (sortConfig.asc ? "▲" : "▼")}
-						</button>
-					</div>
-				</div>
+				<div className="grid grid-cols-2 gap-4 p-4">
+					<div className="">
+						<div className="flex justify-between items-center">
+							<CategoryFilter
+								categories={categories}
+								selectedCategory={selectedCategory}
+								setSelectedCategory={handleCategoryChange}
+							/>
+							<div>
+								<button
+									onClick={() => handleSort("priority")}
+									className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2"
+								>
+									Sort by Priority{" "}
+									{sortConfig.field === "priority" &&
+										(sortConfig.asc ? "▲" : "▼")}
+								</button>
+								<button
+									onClick={() => handleSort("dueDate")}
+									className="bg-green-500 text-white px-4 py-2 rounded-md"
+								>
+									Sort by Due Date{" "}
+									{sortConfig.field === "dueDate" &&
+										(sortConfig.asc ? "▲" : "▼")}
+								</button>
+							</div>
+						</div>
 
-				{/* Add Category Section */}
-				<div className="mt-4 bg-white p-4 rounded-md shadow-md">
-					<h2 className="text-xl font-bold mb-2">Add New Category</h2>
-					<input
-						type="text"
-						placeholder="Category name"
-						value={newCategoryName}
-						onChange={(e) => setNewCategoryName(e.target.value)}
-						className="px-4 py-2 border rounded-md w-full mb-2"
-					/>
-					{categoryError && <p className="text-red-500">{categoryError}</p>}
-					<button
-						onClick={handleAddCategory}
-						className="bg-blue-500 text-white px-4 py-2 rounded-md"
-					>
-						Add Category
-					</button>
-				</div>
-
-				<TaskForm
-					onTaskAdd={(task) => setTasks((prev) => [...prev, task])}
-					categories={categories}
-				/>
-				<div className="mt-4">
-					<div className="flex justify-between items-center mb-4">
-						<div className="flex space-x-4">
+						<div className="mt-6">
 							<input
 								type="text"
 								placeholder="Search tasks"
 								value={searchQuery}
 								onChange={handleSearchChange}
-								className="px-4 py-2 border rounded-md"
+								className="px-4 py-2 border rounded-md w-full mb-4"
 							/>
+							{tasks.map((task) => (
+								<TaskItem
+									key={task.id}
+									task={task}
+									onUpdate={(updatedTask) =>
+										setTasks((prev) =>
+											prev.map((t) =>
+												t.id === updatedTask.id ? updatedTask : t
+											)
+										)
+									}
+									onDelete={(id) =>
+										setTasks((prev) => prev.filter((t) => t.id !== id))
+									}
+								/>
+							))}
+						</div>
+						{tasks.length === 0 && (
+							<p className="text-center text-gray-500 mt-4">
+								No tasks available. Add a new task to get started!
+							</p>
+						)}
+
+						{/* Pagination Controls */}
+						<div className="flex items-center justify-between">
 							<select
 								value={itemsPerPage}
 								onChange={handleItemsPerPageChange}
-								className="px-4 py-2 border rounded-md"
+								className="px-4 py-2 border rounded-md bg-white"
 							>
 								<option value={5}>5</option>
 								<option value={10}>10</option>
 								<option value={20}>20</option>
 								<option value={50}>50</option>
 							</select>
+							<div className="flex justify-center items-center mt-4">
+								<button
+									onClick={() => handlePageChange(currentPage - 1)}
+									disabled={currentPage === 1}
+									className="px-4 py-2 bg-gray-300 rounded-md mr-2 disabled:opacity-50"
+								>
+									Previous
+								</button>
+								<span className="text-lg">
+									Page {currentPage} of {totalPages}
+								</span>
+								<button
+									onClick={() => handlePageChange(currentPage + 1)}
+									disabled={currentPage === totalPages}
+									className="px-4 py-2 bg-gray-300 rounded-md ml-2 disabled:opacity-50"
+								>
+									Next
+								</button>
+							</div>
 						</div>
 					</div>
-					{tasks.map((task) => (
-						<TaskItem
-							key={task.id}
-							task={task}
-							onUpdate={(updatedTask) =>
-								setTasks((prev) =>
-									prev.map((t) => (t.id === updatedTask.id ? updatedTask : t))
-								)
-							}
-							onDelete={(id) =>
-								setTasks((prev) => prev.filter((t) => t.id !== id))
-							}
+					<div className="">
+						{/* Add Category Section */}
+						<div className="mb-4 bg-white p-4 rounded-md shadow-md">
+							<h2 className="text-xl font-bold mb-2">Add New Category</h2>
+							<input
+								type="text"
+								placeholder="Category name"
+								value={newCategoryName}
+								onChange={(e) => setNewCategoryName(e.target.value)}
+								className="px-4 py-2 border rounded-md w-full mb-2"
+							/>
+							{categoryError && <p className="text-red-500">{categoryError}</p>}
+							<button
+								onClick={handleAddCategory}
+								className="bg-blue-500 text-white px-4 py-2 rounded-md"
+							>
+								Add Category
+							</button>
+						</div>
+						{/* Task form */}
+						<TaskForm
+							onTaskAdd={(task) => setTasks((prev) => [...prev, task])}
+							categories={categories}
 						/>
-					))}
-				</div>
-				{tasks.length === 0 && (
-					<p className="text-center text-gray-500 mt-4">
-						No tasks available. Add a new task to get started!
-					</p>
-				)}
-
-				{/* Pagination Controls */}
-				<div className="flex justify-center items-center mt-4">
-					<button
-						onClick={() => handlePageChange(currentPage - 1)}
-						disabled={currentPage === 1}
-						className="px-4 py-2 bg-gray-300 rounded-md mr-2 disabled:opacity-50"
-					>
-						Previous
-					</button>
-					<span className="text-lg">
-						Page {currentPage} of {totalPages}
-					</span>
-					<button
-						onClick={() => handlePageChange(currentPage + 1)}
-						disabled={currentPage === totalPages}
-						className="px-4 py-2 bg-gray-300 rounded-md ml-2 disabled:opacity-50"
-					>
-						Next
-					</button>
+					</div>
 				</div>
 			</main>
 		</div>
