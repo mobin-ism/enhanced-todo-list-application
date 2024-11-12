@@ -2,34 +2,48 @@ import { useState } from "react";
 import axios from "axios";
 
 const TaskForm = ({ onTaskAdd, categories }) => {
+	const getTodayDate = () => {
+		const today = new Date();
+		const year = today.getFullYear();
+		const month = String(today.getMonth() + 1).padStart(2, "0"); // Months are zero-based
+		const day = String(today.getDate()).padStart(2, "0");
+		return `${year}-${month}-${day}`;
+	};
+
 	const [title, setTitle] = useState("");
-	const [category, setCategory] = useState("");
+	const [category, setCategory] = useState(null);
 	const [description, setDescription] = useState("");
-	const [dueDate, setDueDate] = useState("");
-	const [priority, setPriority] = useState("");
+	const [dueDate, setDueDate] = useState(getTodayDate()); // Default to today's date
+	const [priority, setPriority] = useState(1);
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
-		const newTask = { title, category, description, dueDate, priority };
+		// Dynamically build the payload
+		const payload = {
+			title,
+			description,
+			dueDate,
+			priority,
+		};
+
+		if (category) {
+			payload.categoryId = category;
+		}
 
 		try {
-			const response = await axios.post("http://localhost:3000/v1/tasks", {
-				title: newTask.title,
-				categoryId: newTask.category,
-				description: newTask.description,
-				dueDate: newTask.dueDate,
-				priority: newTask.priority,
-			});
-			console.log(response.data);
+			const response = await axios.post(
+				"http://localhost:3000/v1/tasks",
+				payload
+			);
 			onTaskAdd(response.data);
 
 			// Reset form fields
 			setTitle("");
 			setCategory("");
 			setDescription("");
-			setDueDate("");
-			setPriority("");
+			setDueDate(getTodayDate()); // Reset to today's date
+			setPriority(1);
 		} catch (err) {
 			console.error("Failed to add task:", err);
 			alert("Failed to add task. Please try again.");
@@ -54,7 +68,7 @@ const TaskForm = ({ onTaskAdd, categories }) => {
 				</label>
 				<select
 					className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-					value={category}
+					value={category || ""}
 					onChange={(e) => setCategory(e.target.value)}
 				>
 					<option value="">Select a category</option>
@@ -73,7 +87,6 @@ const TaskForm = ({ onTaskAdd, categories }) => {
 					className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
 					value={description}
 					onChange={(e) => setDescription(e.target.value)}
-					rows="3"
 				/>
 			</div>
 			<div className="mb-4">
@@ -94,19 +107,18 @@ const TaskForm = ({ onTaskAdd, categories }) => {
 				<select
 					className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
 					value={priority}
-					onChange={(e) => setPriority(e.target.value)}
+					onChange={(e) => setPriority(parseInt(e.target.value))}
 				>
-					<option value="">Select Priority</option>
-					<option value="high">High</option>
-					<option value="medium">Medium</option>
-					<option value="low">Low</option>
+					<option value="3">High</option>
+					<option value="2">Medium</option>
+					<option value="1">Low</option>
 				</select>
 			</div>
 			<button
 				type="submit"
-				className="w-full bg-blue-500 text-white p-2 rounded-md"
+				className="bg-blue-500 text-white px-4 py-2 rounded-md"
 			>
-				Add Task
+				Add New Task
 			</button>
 		</form>
 	);

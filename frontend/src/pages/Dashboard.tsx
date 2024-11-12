@@ -5,6 +5,9 @@ import TaskForm from "../components/TaskForm";
 import TaskItem from "../components/TaskItem";
 import CategoryFilter from "../components/CategoryFilter";
 import axios from "axios";
+import { MdNavigateNext } from "react-icons/md";
+import { GrFormNext, GrFormPrevious } from "react-icons/gr";
+import { CiLogout } from "react-icons/ci";
 
 interface Task {
 	id: string;
@@ -22,11 +25,11 @@ const Dashboard = () => {
 	);
 	const [selectedCategory, setSelectedCategory] = useState<string>("");
 	const [sortConfig, setSortConfig] = useState<{ field: string; asc: boolean }>(
-		{ field: "", asc: true }
+		{ field: "dueDate", asc: true }
 	);
 	const [currentPage, setCurrentPage] = useState<number>(1);
 	const [totalPages, setTotalPages] = useState<number>(1);
-	const [itemsPerPage, setItemsPerPage] = useState<number>(10);
+	const [itemsPerPage, setItemsPerPage] = useState<number>(5);
 	const [searchQuery, setSearchQuery] = useState<string>("");
 	const [newCategoryName, setNewCategoryName] = useState<string>(""); // New state for category input
 	const [categoryError, setCategoryError] = useState<string>(""); // Error handling for category addition
@@ -139,7 +142,7 @@ const Dashboard = () => {
 						onClick={handleLogout}
 						className="bg-red-500 text-white px-4 py-2 rounded-md"
 					>
-						Logout
+						<span className="inline-grid">Logout</span>
 					</button>
 				</div>
 			</header>
@@ -191,9 +194,7 @@ const Dashboard = () => {
 											)
 										)
 									}
-									onDelete={(id) =>
-										setTasks((prev) => prev.filter((t) => t.id !== id))
-									}
+									onDelete={() => fetchTasks()}
 								/>
 							))}
 						</div>
@@ -221,7 +222,7 @@ const Dashboard = () => {
 									disabled={currentPage === 1}
 									className="px-4 py-2 bg-gray-300 rounded-md mr-2 disabled:opacity-50"
 								>
-									Previous
+									<GrFormPrevious />
 								</button>
 								<span className="text-lg">
 									Page {currentPage} of {totalPages}
@@ -231,7 +232,7 @@ const Dashboard = () => {
 									disabled={currentPage === totalPages}
 									className="px-4 py-2 bg-gray-300 rounded-md ml-2 disabled:opacity-50"
 								>
-									Next
+									<GrFormNext />
 								</button>
 							</div>
 						</div>
@@ -256,10 +257,7 @@ const Dashboard = () => {
 							</button>
 						</div>
 						{/* Task form */}
-						<TaskForm
-							onTaskAdd={(task) => setTasks((prev) => [...prev, task])}
-							categories={categories}
-						/>
+						<TaskForm onTaskAdd={() => fetchTasks()} categories={categories} />
 					</div>
 				</div>
 			</main>
