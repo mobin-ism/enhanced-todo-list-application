@@ -11,7 +11,6 @@ const createTask = catchAsync(async (req, res) => {
     const body = req.body
     body.userId = req.user.id
     const task = await taskService.createTask(body)
-    console.log({ task })
     res.status(httpStatus.status.CREATED).send(task)
 })
 

@@ -1,6 +1,7 @@
 const httpStatus = require('http-status')
 const Task = require('../models/task.model')
 const ApiError = require('../utils/ApiError')
+const { get } = require('mongoose')
 
 /**
  * Create a task
@@ -62,7 +63,7 @@ const updateTaskById = async (taskId, updateBody, userId) => {
     }
     Object.assign(task, updateBody)
     await task.save()
-    return task
+    return await getTaskById(taskId, userId)
 }
 
 /**
