@@ -8,7 +8,8 @@ const ApiError = require('../utils/ApiError')
  * @returns {Promise<Task>}
  */
 const createTask = async (taskBody) => {
-    return Task.create(taskBody)
+    const createdTask = await Task.create(taskBody)
+    return await getTaskById(createdTask.id, createdTask.userId)
 }
 
 /**

@@ -8,7 +8,7 @@ const createTask = {
         dueDate: Joi.date().iso(), // ISO 8601 date format
         categoryId: Joi.string().optional().custom(objectId), // Optional field, must be a valid ObjectId if provided
         userId: Joi.string().optional().custom(objectId), // Optional field, must be a valid ObjectId if provided
-        priority: Joi.string().valid('high', 'medium', 'low').default('low') // Default value is 'low'
+        priority: Joi.number().optional().valid(1, 2, 3).default(1) // Default value is 'low'
     })
 }
 
@@ -19,7 +19,7 @@ const getTasks = {
         dueDate: Joi.date().iso(),
         isCompleted: Joi.boolean(),
         categoryId: Joi.string().optional().custom(objectId), // Optional field
-        priority: Joi.string().valid('high', 'medium', 'low'), // Default value is 'low'
+        priority: Joi.number().optional().valid(1, 2, 3).default(1), // Default value is 'low'
         sortBy: Joi.string(),
         limit: Joi.number().integer(),
         page: Joi.number().integer()
@@ -44,10 +44,7 @@ const updateTask = {
             isCompleted: Joi.boolean().optional().default(false),
             categoryId: Joi.string().optional().custom(objectId), // Optional field, must be a valid ObjectId if provided
             userId: Joi.string().optional().custom(objectId), // Optional field, must be a valid ObjectId if provided
-            priority: Joi.string()
-                .optional()
-                .valid('high', 'medium', 'low')
-                .default('low') // Default value is 'low'
+            priority: Joi.number().optional().valid(1, 2, 3).default(1) // Default value is 'low'
         })
         .min(1) // Ensure at least one field is being updated
 }
