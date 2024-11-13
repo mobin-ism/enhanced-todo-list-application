@@ -1,15 +1,17 @@
 FROM node:alpine
+# Set the working directory to /app
+WORKDIR /app
+# Copy the package.json and package-lock.json files
+COPY package*.json ./
+# Install the dependencies
+RUN npm install
+# Copy the application code
+COPY . .
+# Build the application
+# RUN npm run build
 
-RUN mkdir -p /usr/src/node-app && chown -R node:node /usr/src/node-app
-
-WORKDIR /usr/src/node-app
-
-COPY package.json yarn.lock ./
-
-USER node
-
-RUN yarn install --pure-lockfile
-
-COPY --chown=node:node . .
-
+# Expose the port that the Express.js app will run on
 EXPOSE 3000
+
+# Start the Express.js app
+CMD ["npm", "run", "dev"]
