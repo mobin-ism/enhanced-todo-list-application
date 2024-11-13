@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axiosInstance from "../utils/axios-instance";
+import { FiPlus } from "react-icons/fi";
 
 const TaskForm = ({ onTaskAdd, categories }) => {
 	const getTodayDate = () => {
@@ -49,33 +50,65 @@ const TaskForm = ({ onTaskAdd, categories }) => {
 
 	return (
 		<form onSubmit={handleSubmit} className="bg-white p-4 shadow-md rounded-md">
-			<h2 className="text-xl font-bold mb-2">Add New Task</h2>
-			<div className="mb-4">
-				<label className="block text-sm font-medium text-gray-700">Title</label>
-				<input
-					type="text"
-					className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-					value={title}
-					onChange={(e) => setTitle(e.target.value)}
-				/>
+			<p className="text-xl font-bold mb-2">Add New Task</p>
+			<div className="mb-4 flex space-x-4">
+				<div className="basis-1/2">
+					<label className="block text-sm font-medium text-gray-700">
+						Task To Do
+					</label>
+					<input
+						type="text"
+						className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+						value={title}
+						onChange={(e) => setTitle(e.target.value)}
+					/>
+				</div>
+				<div className="basis-1/2">
+					<label className="block text-sm font-medium text-gray-700">
+						Priority
+					</label>
+					<select
+						className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+						value={priority}
+						onChange={(e) => setPriority(parseInt(e.target.value))}
+					>
+						<option value="3">High</option>
+						<option value="2">Medium</option>
+						<option value="1">Low</option>
+					</select>
+				</div>
 			</div>
-			<div className="mb-4">
-				<label className="block text-sm font-medium text-gray-700">
-					Category
-				</label>
-				<select
-					className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-					value={category || ""}
-					onChange={(e) => setCategory(e.target.value)}
-				>
-					<option value="">Select a category</option>
-					{categories.map((cat) => (
-						<option key={cat._id} value={cat.id}>
-							{cat.name}
-						</option>
-					))}
-				</select>
+			<div className="mb-4 flex space-x-4">
+				<div className="basis-1/2">
+					<label className="block text-sm font-medium text-gray-700">
+						Category
+					</label>
+					<select
+						className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+						value={category || ""}
+						onChange={(e) => setCategory(e.target.value)}
+					>
+						<option value="">Select a category</option>
+						{categories.map((cat) => (
+							<option key={cat._id} value={cat.id}>
+								{cat.name}
+							</option>
+						))}
+					</select>
+				</div>
+				<div className="basis-1/2">
+					<label className="block text-sm font-medium text-gray-700">
+						Due Date
+					</label>
+					<input
+						type="date"
+						className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+						value={dueDate}
+						onChange={(e) => setDueDate(e.target.value)}
+					/>
+				</div>
 			</div>
+
 			<div className="mb-4">
 				<label className="block text-sm font-medium text-gray-700">
 					Description
@@ -86,36 +119,12 @@ const TaskForm = ({ onTaskAdd, categories }) => {
 					onChange={(e) => setDescription(e.target.value)}
 				/>
 			</div>
-			<div className="mb-4">
-				<label className="block text-sm font-medium text-gray-700">
-					Due Date
-				</label>
-				<input
-					type="date"
-					className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-					value={dueDate}
-					onChange={(e) => setDueDate(e.target.value)}
-				/>
-			</div>
-			<div className="mb-4">
-				<label className="block text-sm font-medium text-gray-700">
-					Priority
-				</label>
-				<select
-					className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-					value={priority}
-					onChange={(e) => setPriority(parseInt(e.target.value))}
-				>
-					<option value="3">High</option>
-					<option value="2">Medium</option>
-					<option value="1">Low</option>
-				</select>
-			</div>
+
 			<button
 				type="submit"
-				className="bg-blue-500 text-white px-4 py-2 rounded-md"
+				className="bg-blue-50 text-blue-600 px-4 py-2 rounded-md flex flex-row items-center outline outline-1 outline-blue-300"
 			>
-				Add New Task
+				<FiPlus /> &nbsp;Add New Task
 			</button>
 		</form>
 	);

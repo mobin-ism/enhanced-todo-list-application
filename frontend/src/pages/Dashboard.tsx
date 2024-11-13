@@ -6,6 +6,9 @@ import TaskItem from "../components/TaskItem";
 import CategoryFilter from "../components/CategoryFilter";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import axiosInstance from "../utils/axios-instance";
+import { BiCaretDown, BiCaretUp } from "react-icons/bi";
+import { RiLogoutBoxLine } from "react-icons/ri";
+import { FiPlus } from "react-icons/fi";
 
 interface Task {
 	id: string;
@@ -138,9 +141,12 @@ const Dashboard = () => {
 					<h1 className="text-2xl font-bold">Dashboard</h1>
 					<button
 						onClick={handleLogout}
-						className="bg-red-500 text-white px-4 py-2 rounded-md"
+						className="bg-red-500 text-white px-4 py-2 rounded-md flex"
 					>
-						<span className="inline-grid">Logout</span>
+						<span className="flex flex-row items-center">
+							<RiLogoutBoxLine />
+							&nbsp; Logout
+						</span>
 					</button>
 				</div>
 			</header>
@@ -153,22 +159,22 @@ const Dashboard = () => {
 								selectedCategory={selectedCategory}
 								setSelectedCategory={handleCategoryChange}
 							/>
-							<div>
+							<div className="flex">
 								<button
 									onClick={() => handleSort("priority")}
-									className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2"
+									className="bg-blue-50 text-blue-700 px-4 py-2 rounded-md mr-2 outline outline-1 outline-blue-300 flex flex-row items-center"
 								>
 									Sort by Priority{" "}
 									{sortConfig.field === "priority" &&
-										(sortConfig.asc ? "▲" : "▼")}
+										(sortConfig.asc ? <BiCaretUp /> : <BiCaretDown />)}
 								</button>
 								<button
 									onClick={() => handleSort("dueDate")}
-									className="bg-green-500 text-white px-4 py-2 rounded-md"
+									className="bg-green-50 text-green-700 px-4 py-2 rounded-md mr-2 outline outline-1 outline-green-300 flex flex-row items-center"
 								>
 									Sort by Due Date{" "}
 									{sortConfig.field === "dueDate" &&
-										(sortConfig.asc ? "▲" : "▼")}
+										(sortConfig.asc ? <BiCaretUp /> : <BiCaretDown />)}
 								</button>
 							</div>
 						</div>
@@ -238,7 +244,7 @@ const Dashboard = () => {
 					<div className="">
 						{/* Add Category Section */}
 						<div className="mb-4 bg-white p-4 rounded-md shadow-md">
-							<h2 className="text-xl font-bold mb-2">Add New Category</h2>
+							<p className="text-xl font-bold mb-2">Add New Category</p>
 							<input
 								type="text"
 								placeholder="Category name"
@@ -249,9 +255,9 @@ const Dashboard = () => {
 							{categoryError && <p className="text-red-500">{categoryError}</p>}
 							<button
 								onClick={handleAddCategory}
-								className="bg-blue-500 text-white px-4 py-2 rounded-md"
+								className="bg-blue-50 text-blue-600 px-4 py-2 rounded-md flex flex-row items-center outline outline-1 outline-blue-300 mt-2"
 							>
-								Add Category
+								<FiPlus /> &nbsp; Add Category
 							</button>
 						</div>
 						{/* Task form */}

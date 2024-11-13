@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { HiOutlinePencilAlt } from "react-icons/hi";
-import { FaCheck } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import axiosInstance from "../utils/axios-instance";
+import { IoCheckmark } from "react-icons/io5";
 
 interface Category {
 	id: string;
@@ -67,7 +67,13 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onUpdate, onDelete }) => {
 
 	const handleSave = async () => {
 		try {
-			const { id, ...taskData } = updatedTask;
+			delete updatedTask.id;
+
+			const taskData = {
+				...updatedTask,
+				categoryId: updatedTask.categoryId?.id || null,
+			};
+
 			const response = await axiosInstance.patch<Task>(
 				`/tasks/${task.id}`,
 				taskData
@@ -140,7 +146,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onUpdate, onDelete }) => {
 							}
 							className="mt-2 p-2 border rounded-md mr-1"
 						/>
-						<select
+						{/* <select
 							value={updatedTask.categoryId || ""} // Handle cases where categoryId is null
 							onChange={(e) =>
 								setUpdatedTask({
@@ -156,8 +162,8 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onUpdate, onDelete }) => {
 									{category.name}
 								</option>
 							))}
-						</select>
-						{/* <select
+						</select> */}
+						<select
 							value={updatedTask.categoryId?.id || ""} // Set the existing category as selected
 							onChange={(e) =>
 								setUpdatedTask({
@@ -176,7 +182,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onUpdate, onDelete }) => {
 									{category.name}
 								</option>
 							))}
-						</select> */}
+						</select>
 						<select
 							value={updatedTask.priority}
 							onChange={(e) =>
@@ -194,7 +200,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onUpdate, onDelete }) => {
 					</div>
 				) : (
 					<div>
-						<h3
+						<p
 							className={`text-lg font-medium ${
 								task.isCompleted ? "line-through text-gray-500" : ""
 							}`}
@@ -212,7 +218,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onUpdate, onDelete }) => {
 							{task.title}
 							{task.priority && (
 								<span
-									className={`ml-2 text-xs px-2 py-0.4 rounded-full font-semibold ${
+									className={`ml-2 text-xs px-2 py-0.5 rounded-full font-bold ${
 										task.priority === 3
 											? "bg-red-500 text-white"
 											: task.priority === 2
@@ -227,7 +233,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onUpdate, onDelete }) => {
 										: "Low"}
 								</span>
 							)}
-						</h3>
+						</p>
 
 						<p className="text-sm text-gray-600">{task.description}</p>
 						{task.categoryId && (
@@ -248,13 +254,13 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onUpdate, onDelete }) => {
 					<>
 						<button
 							onClick={handleSave}
-							className="bg-green-500 text-white px-2 py-2 rounded-md"
+							className="bg-blue-50 text-blue-600 px-2 py-2 rounded-md outline outline-1 outline-blue-300"
 						>
-							<FaCheck />
+							<IoCheckmark />
 						</button>
 						<button
 							onClick={handleCancel}
-							className="bg-gray-500 text-white px-2 py-2 rounded-md"
+							className="bg-slate-50 text-slate-600 px-2 py-2 rounded-md outline outline-1 outline-slate-300"
 						>
 							<RxCross2 />
 						</button>
@@ -263,13 +269,13 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onUpdate, onDelete }) => {
 					<>
 						<button
 							onClick={handleEdit}
-							className="bg-yellow-500 text-white px-2 py-2 rounded-md"
+							className="bg-orange-50 text-orange-600 px-2 py-2 rounded-md outline outline-1 outline-orange-300"
 						>
 							<HiOutlinePencilAlt />
 						</button>
 						<button
 							onClick={handleDelete}
-							className="bg-red-500 text-white px-2 py-2 rounded-md"
+							className="bg-red-50 text-red-600 px-2 py-2 rounded-md outline outline-1 outline-red-300"
 						>
 							<RiDeleteBin6Line />
 						</button>
