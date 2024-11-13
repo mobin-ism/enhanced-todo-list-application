@@ -27,7 +27,9 @@ yarn-debug.log*
 yarn-error.log*
 
 # Loc files
-*.loc
+# Compiled package-lock.json
+package-lock.json
+yarn.lock
 # IDE - VSCode
 .vscode/*
 !.vscode/settings.json
