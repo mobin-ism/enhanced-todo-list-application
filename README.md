@@ -53,7 +53,8 @@ An advanced Todo application built with React, Node.js (v22.11.0), and MongoDB. 
 ## Tech Stack
 
 - **Frontend**: React, Vite, Tailwind CSS, Nginx
-- **Backend**: Node.js, Express, Swagger
+- **Backend**: Node.js, Express
+- **API Documentation**: Swagger
 - **Database**: MongoDB
 - **Containerization**: Docker, Docker Compose
 
