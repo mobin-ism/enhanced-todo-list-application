@@ -127,8 +127,24 @@ enhanced-todo-list-application/
    ```
 
 4. **Access the application**:
+
    - **Frontend**: [http://localhost:8080](http://localhost:8080)
    - **Backend**: [http://localhost:3000](http://localhost:3000)
+
+5. **Authentication Options**
+
+   - **Superadmin Access**:
+
+     A pre-seeded superadmin account is available for immediate use. The credentials are:
+
+     - **Email**: `superadmin@example.com`
+     - **Password**: `password123`
+
+   - **User Registration**:
+
+     New users can create their own accounts directly from the application. Each user will have a personalized dashboard to manage tasks and categories.
+
+The superadmin account is populated via the seeding mechanism during the initial setup, providing administrative access to oversee the application.
 
 ---
 
@@ -167,8 +183,22 @@ enhanced-todo-list-application/
      ```
 
 5. **Access the application**:
+
    - **Frontend**: [http://localhost:8080](http://localhost:8080)
    - **Backend**: [http://localhost:3000](http://localhost:3000)
+
+6. **Authentication Options**
+
+   - **Superadmin Access**:
+
+     A pre-seeded superadmin account is available for immediate use. The credentials are:
+
+     - **Email**: `superadmin@example.com`
+     - **Password**: `password123`
+
+   - **User Registration**:
+
+     New users can create their own accounts directly from the application. Each user will have a personalized dashboard to manage tasks and categories.
 
 ---
 
