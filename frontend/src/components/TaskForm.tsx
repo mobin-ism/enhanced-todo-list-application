@@ -1,8 +1,26 @@
 import { useState } from "react";
 import axiosInstance from "../utils/axios-instance";
 import { FiPlus } from "react-icons/fi";
+import { Task } from "../types/types";
 
-const TaskForm = ({ onTaskAdd, categories }) => {
+interface Category {
+	id: string;
+	name: string;
+}
+interface TaskFormProps {
+	onTaskAdd: (task: Task) => void;
+	categories: Category[];
+}
+
+interface TaskPayload {
+	title: string;
+	description?: string;
+	dueDate: string;
+	priority: number;
+	categoryId?: string | null; // Optional field
+}
+
+const TaskForm: React.FC<TaskFormProps> = ({ onTaskAdd, categories }) => {
 	const getTodayDate = () => {
 		const today = new Date();
 		const year = today.getFullYear();
@@ -12,16 +30,16 @@ const TaskForm = ({ onTaskAdd, categories }) => {
 	};
 
 	const [title, setTitle] = useState("");
-	const [category, setCategory] = useState(null);
+	const [category, setCategory] = useState<string | null>(null);
 	const [description, setDescription] = useState("");
 	const [dueDate, setDueDate] = useState(getTodayDate()); // Default to today's date
 	const [priority, setPriority] = useState(1);
 
-	const handleSubmit = async (e) => {
+	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
 		// Dynamically build the payload
-		const payload = {
+		const payload: TaskPayload = {
 			title,
 			description,
 			dueDate,
@@ -29,7 +47,7 @@ const TaskForm = ({ onTaskAdd, categories }) => {
 		};
 
 		if (category) {
-			payload.categoryId = category;
+			payload.categoryId = category ? category : "";
 		}
 
 		try {
@@ -38,7 +56,7 @@ const TaskForm = ({ onTaskAdd, categories }) => {
 
 			// Reset form fields
 			setTitle("");
-			setCategory("");
+			setCategory(null);
 			setDescription("");
 			setDueDate(getTodayDate()); // Reset to today's date
 			setPriority(1);
@@ -58,9 +76,11 @@ const TaskForm = ({ onTaskAdd, categories }) => {
 					</label>
 					<input
 						type="text"
+						required
 						className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
 						value={title}
 						onChange={(e) => setTitle(e.target.value)}
+						placeholder="Enter task title"
 					/>
 				</div>
 				<div className="basis-1/2">
@@ -90,7 +110,7 @@ const TaskForm = ({ onTaskAdd, categories }) => {
 					>
 						<option value="">Select a category</option>
 						{categories.map((cat) => (
-							<option key={cat._id} value={cat.id}>
+							<option key={cat.id} value={cat.id}>
 								{cat.name}
 							</option>
 						))}

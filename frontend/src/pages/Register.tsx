@@ -34,7 +34,11 @@ const Register = () => {
 			});
 
 			if (response.data.tokens && response.data.user) {
-				login(response.data.tokens.access.token, response.data.user); // Save token and user data in AuthContext
+				login(
+					response.data.tokens.access.token,
+					response.data.user,
+					response.data.tokens.refresh.token
+				); // Save token and user data in AuthContext
 				navigate("/dashboard"); // Redirect to dashboard
 			} else {
 				throw new Error("Invalid response from server");

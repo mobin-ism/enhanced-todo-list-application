@@ -4,20 +4,20 @@ import { HiOutlinePencilAlt } from "react-icons/hi";
 import { RxCross2 } from "react-icons/rx";
 import axiosInstance from "../utils/axios-instance";
 import { IoCheckmark } from "react-icons/io5";
-
-interface Category {
-	id: string;
-	name: string;
-}
-interface Task {
-	id: string;
-	title: string;
-	description: string;
-	dueDate: string;
-	categoryId: null | Category;
-	isCompleted: boolean;
-	priority: 1 | 2 | 3;
-}
+import { Task, Category } from "../types/types";
+// interface Category {
+// 	id: string;
+// 	name: string;
+// }
+// interface Task {
+// 	id?: string;
+// 	title: string;
+// 	description: string;
+// 	dueDate: string;
+// 	categoryId: null | Category;
+// 	isCompleted: boolean;
+// 	priority: 1 | 2 | 3;
+// }
 
 interface TaskItemProps {
 	task: Task;
@@ -66,13 +66,22 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onUpdate, onDelete }) => {
 	};
 
 	const handleSave = async () => {
+		let taskData = {};
+		console.log(updatedTask);
 		try {
 			delete updatedTask.id;
-
-			const taskData = {
-				...updatedTask,
-				categoryId: updatedTask.categoryId?.id || null,
-			};
+			// remove the category object from the updatedTask object if it is empty
+			if (!updatedTask.categoryId || !updatedTask.categoryId.id) {
+				console.log("category id not found");
+				delete updatedTask.categoryId;
+				taskData = { ...updatedTask };
+			} else {
+				console.log("category id found");
+				taskData = {
+					...updatedTask,
+					categoryId: updatedTask.categoryId?.id || null,
+				};
+			}
 
 			const response = await axiosInstance.patch<Task>(
 				`/tasks/${task.id}`,
@@ -95,7 +104,11 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onUpdate, onDelete }) => {
 		if (window.confirm("Are you sure you want to delete this task?")) {
 			try {
 				await axiosInstance.delete(`/tasks/${task.id}`);
-				onDelete(task.id);
+				if (task.id) {
+					onDelete(task.id);
+				} else {
+					console.error("Task ID is undefined");
+				}
 			} catch (err) {
 				console.error("Failed to delete task:", err);
 				alert("Failed to delete task. Please try again.");

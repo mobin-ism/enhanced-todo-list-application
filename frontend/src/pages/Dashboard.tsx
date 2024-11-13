@@ -9,15 +9,19 @@ import axiosInstance from "../utils/axios-instance";
 import { BiCaretDown, BiCaretUp } from "react-icons/bi";
 import { RiLogoutBoxLine } from "react-icons/ri";
 import { FiPlus } from "react-icons/fi";
+import { Task } from "../types/types";
 
-interface Task {
-	id: string;
-	title: string;
-	category: string;
-	priority?: string;
-	description?: string;
-	dueDate?: string;
-}
+// interface Task {
+// 	id: string;
+// 	title: string;
+// 	category: string;
+// 	categoryId?: string;
+// 	isCompleted: boolean;
+// 	priority: number;
+// 	description?: string;
+// 	dueDate?: string;
+// }
+// types.ts
 
 const Dashboard = () => {
 	const [tasks, setTasks] = useState<Task[]>([]);
@@ -191,7 +195,7 @@ const Dashboard = () => {
 								<TaskItem
 									key={task.id}
 									task={task}
-									onUpdate={(updatedTask) =>
+									onUpdate={(updatedTask: Task) =>
 										setTasks((prev) =>
 											prev.map((t) =>
 												t.id === updatedTask.id ? updatedTask : t
