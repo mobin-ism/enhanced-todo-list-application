@@ -1,17 +1,23 @@
-FROM node:alpine
-# Set the working directory to /app
-WORKDIR /app
-# Copy the package.json and package-lock.json files
-COPY package*.json ./
-# Install the dependencies
-RUN npm install
-# Copy the application code
-COPY . .
-# Build the application
-# RUN npm run build
+FROM node:22.11.0-alpine
 
-# Expose the port that the Express.js app will run on
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy only the package.json and yarn.lock files first
+COPY package.json yarn.lock ./
+
+# Install dependencies using Yarn
+RUN yarn install --frozen-lockfile
+
+# Copy the rest of the application code
+COPY . .
+
+# Ensure the container uses a non-root user for security
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+USER appuser
+
+# Expose the port that the Express.js app listens on
 EXPOSE 3000
 
-# Start the Express.js app
-CMD ["npm", "run", "dev"]
+# Start the application using Yarn
+CMD ["yarn", "start"]

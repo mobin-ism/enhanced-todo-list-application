@@ -38,5 +38,5 @@ lerna-debug.log*
 .env
 
 # Compiled package-lock.json
-package-lock.json
-yarn.lock
+# package-lock.json
+# yarn.lock
