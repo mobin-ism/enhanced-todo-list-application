@@ -1,31 +1,72 @@
-version: '3'
+version: "3.8"
+
 services:
-    node-app:
-        build: .
-        image: node-app
-        environment:
-            - MONGODB_URL=mongodb://mongodb:27017/node-boilerplate
-        ports:
-            - '3000:3000'
-        depends_on:
-            - mongodb
-        volumes:
-            - .:/usr/src/node-app
-        networks:
-            - node-network
+  # MongoDB service
+  enhanced-todo-app-mongodb:
+    image: mongo:latest
+    container_name: enhanced-todo-app-mongodb
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mongodb
+      - MONGO_INITDB_ROOT_PASSWORD=pLSkczmWBHK0CVh
+      - MONGO_INITDB_DATABASE=todo
+    volumes:
+      - /home/ubuntu/mongo-data:/data/db # Persist MongoDB data
+    ports:
+      - "27017:27017" # Expose MongoDB on default port
+    networks:
+      - app-network
+    restart: always
 
-    mongodb:
-        image: mongo:4.2.1-bionic
-        ports:
-            - '27017:27017'
-        volumes:
-            - dbdata:/data/db
-        networks:
-            - node-network
+  # Backend service (Node.js)
+  enhanced-todo-app-backend:
+    build:
+      context: ./backend # Directory where your backend Dockerfile is located
+    container_name: enhanced-todo-app-backend
+    environment:
+      - PORT=3000
 
-volumes:
-    dbdata:
+      - MONGODB_USER=mongodb
+      - MONGODB_PASSWORD=pLSkczmWBHK0CVh
+      - MONGODB_HOST=enhanced-todo-app-mongodb
+      - MONGODB_PORT=27017
+      - MONGODB_DATABASE=todo
 
+      - JWT_SECRET=thisisasamplesecret
+      - JWT_ACCESS_EXPIRATION_MINUTES=60
+      - JWT_REFRESH_EXPIRATION_DAYS=60
+      - JWT_RESET_PASSWORD_EXPIRATION_MINUTES=60
+      - JWT_VERIFY_EMAIL_EXPIRATION_MINUTES=60
+
+      - SMTP_HOST=smtp.sendgrid.net
+      - SMTP_PORT=587
+      - SMTP_USERNAME=apikey
+      - SMTP_PASSWORD=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
+      - EMAIL_FROM=mobin@anchorblock.vc
+
+    ports:
+      - "3000:3000" # Expose backend on port 5000
+    depends_on:
+      - enhanced-todo-app-mongodb # Ensures MongoDB is started before the backend
+    networks:
+      - app-network
+    restart: always
+
+  # Frontend service (React)
+  enhanced-todo-app-frontend:
+    build:
+      context: ./frontend # Directory where your frontend Dockerfile is located
+      args:
+        - VITE_API_BASE_URL=http://localhost:3000/v1
+    container_name: enhanced-todo-app-frontend
+    ports:
+      - "8080:8080" # Expose frontend on port 3000
+    depends_on:
+      - enhanced-todo-app-backend # Ensures backend is started before the frontend
+    networks:
+      - app-network
+    restart: always
+
+# Networks for services communication
 networks:
-    node-network:
-        driver: bridge
+  app-network:
+    driver: bridge
