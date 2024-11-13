@@ -54,6 +54,7 @@ const getTaskById = async (id, userId) => {
  * Update task by id
  * @param {ObjectId} taskId
  * @param {Object} updateBody
+ * @param {ObjectId} userId
  * @returns {Promise<Task>}
  */
 const updateTaskById = async (taskId, updateBody, userId) => {
@@ -61,8 +62,20 @@ const updateTaskById = async (taskId, updateBody, userId) => {
     if (!task) {
         throw new ApiError(httpStatus.status.NOT_FOUND, 'Task not found')
     }
-    Object.assign(task, updateBody)
-    await task.save()
+
+    // Prepare update operation
+    const updateOperation = { ...updateBody }
+    if (!updateBody.categoryId) {
+        console.log('delete categoryId')
+        updateOperation.$unset = { categoryId: '' } // Use $unset to remove the field
+    }
+
+    console.log('updateOperation', updateOperation)
+
+    // Update the task in the database
+    await Task.updateOne({ _id: taskId, userId }, updateOperation)
+
+    // Fetch and return the updated task
     return await getTaskById(taskId, userId)
 }
 
