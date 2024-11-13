@@ -280,10 +280,7 @@ Go to [http://localhost:3000/v1/docs/](http://localhost:3000/v1/docs/)
 
 - `name`: String (required, trimmed)
 - `email`: String (required, unique, trimmed, lowercase)
-- `Validates as a proper email format
-- `password`: String (required, trimmed, minimum length: 8)
-- `Must contain at least one letter and one number
-- `Stored privately (excluded from JSON representation)
+- `password`: String (required, trimmed, minimum length: 8) Must contain at least one letter and one number, Stored privately (excluded from JSON representation)
 - `role`: String (enum: values defined in roles, default: 'user')
 - `isEmailVerified`: Boolean (default: true)
 - `timestamps`: CreatedAt, UpdatedAt (automatically added by mongoose)
