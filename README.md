@@ -212,7 +212,7 @@ Create a `.env` file in the `backend/` directory and copy all the content from `
 # Port number
 PORT=3000
 
-# URL of the Mongo DB
+# Your local Mongo DB credentials
 MONGODB_USER=admin
 MONGODB_PASSWORD=password
 MONGODB_HOST=localhost
