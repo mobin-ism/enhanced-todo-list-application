@@ -43,8 +43,18 @@ const Register = () => {
 			} else {
 				throw new Error("Invalid response from server");
 			}
-		} catch (err) {
-			setError("Server error. Please try again later.");
+		} catch (err: any) {
+			if (
+				err.response &&
+				err.response.status === 400 &&
+				err.response.data.message
+			) {
+				// Handle server-provided error message
+				setError(err.response.data.message); // Display the specific error message to the user
+			} else {
+				// Handle generic server errors or unexpected issues
+				setError("Server error. Please try again later.");
+			}
 			console.error(err); // Log error for debugging
 		}
 	};
